@@ -1,0 +1,1048 @@
+/* frontend/src/styles/globals.css */
+
+/**
+ * ScholaChain Global Styles
+ * Comprehensive styling with fixed navbar solution and MetaMask components
+ */
+
+/* ===== BOOTSTRAP IMPORTS ===== */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* ===== CSS CUSTOM PROPERTIES ===== */
+:root {
+  /* Color Palette */
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --metamask-gradient: linear-gradient(135deg, #f6851b 0%, #e27625 100%);
+  --dark-blue: #1a237e;
+  --light-bg: #f8fafc;
+
+  /* Spacing */
+  --section-padding: 80px;
+  --card-border-radius: 16px;
+  --button-border-radius: 12px;
+
+  /* Navbar */
+  --navbar-height: 80px;
+  --navbar-height-mobile: 70px;
+}
+
+/* ===== CSS RESET & BASE STYLES ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/**
+ * Ensure full viewport width and prevent horizontal scroll
+ */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/**
+ * Base body styling with modern font stack and background
+ */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  background: var(--light-bg);
+  line-height: 1.6;
+  color: #2d3748;
+}
+
+/* ===== FIXED NAVBAR SOLUTION ===== */
+/**
+
+/* Navbar spacer - pushes content below fixed navbar */
+.navbar-spacer {
+  height: var(--navbar-height);
+  width: 100%;
+}
+
+/* Ensure all page content starts below navbar */
+main {
+  min-height: calc(100vh - 160px); /* Account for navbar and footer */
+}
+
+/* Specific adjustment for hero section to use full viewport */
+.hero-section {
+  margin-top: calc(-1 * var(--navbar-height)); /* Counteract spacer */
+  padding-top: var(--navbar-height); /* Restore space at top */
+}
+
+/* ===== SMOOTH SCROLL WITH NAVBAR OFFSET ===== */
+/**
+ * CSS-based solution for scroll positioning with fixed navbar
+ */
+
+/* Add scroll margin to all sections that might be targeted */
+section[id] {
+  scroll-margin-top: 100px; /* navbar height + some extra space */
+}
+
+/* Specific sections that are targeted from navigation */
+#features,
+#verification-section {
+  scroll-margin-top: 100px;
+}
+
+/* Ensure smooth scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Override for immediate navigation needs */
+html:not(.no-smooth-scroll) {
+  scroll-behavior: smooth;
+}
+
+/* ===== BACK TO TOP BUTTON ===== */
+.back-to-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  border: none;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.back-to-top-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.back-to-top-btn:active {
+  transform: translateY(-1px);
+}
+
+/* Fade in animation for back to top button */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  .back-to-top-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .back-to-top-btn {
+    border: 2px solid white;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top-btn {
+    transition: none;
+    animation: none;
+  }
+
+  .back-to-top-btn:hover {
+    transform: none;
+  }
+}
+
+/* ===== APPLICATION LAYOUT ===== */
+.app-container {
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* ===== NAVIGATION COMPONENT ===== */
+.certichain-navbar {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  height: var(--navbar-height);
+  z-index: 1030; /* High z-index to stay above content */
+}
+
+/**
+ * Navigation content container for proper alignment
+ * Uses flexbox to space brand, navigation, and system status
+ */
+.navbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+/**
+ * Brand styling with gradient text effect
+ */
+.navbar-brand {
+  font-weight: 800;
+  font-size: 1.5rem;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+/**
+ * Navigation collapse area with proper flex alignment
+ */
+.navbar-collapse {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+/**
+ * Push system status to the right side of navigation
+ */
+.navbar-nav.me-auto {
+  margin-right: auto !important;
+}
+
+/* Navbar link styling */
+.navbar-nav .nav-link {
+  color: #2d3748 !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea !important;
+}
+
+/* Active Navigation Link Styles */
+.navbar-nav .nav-link.active-nav-link {
+  color: #667eea !important;
+  font-weight: 600 !important;
+  background: rgba(102, 126, 234, 0.1) !important;
+  border-radius: 6px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Underline effect for active links */
+.navbar-nav .nav-link.active-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Hover effects for non-active links */
+.navbar-nav .nav-link:not(.active-nav-link):hover {
+  background: rgba(102, 126, 234, 0.05) !important;
+  color: #667eea !important;
+  transition: all 0.3s ease;
+}
+
+/* Animation for the underline */
+@keyframes slideIn {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 991.98px) {
+  .navbar-nav .nav-link.active-nav-link::after {
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.25rem;
+  }
+
+  .navbar-nav .nav-link {
+    text-align: center;
+    margin: 0.125rem 0;
+  }
+}
+
+/* Icon colors for active states */
+.navbar-nav .nav-link.active-nav-link i {
+  color: #667eea !important;
+}
+
+/* ===== META MASK ACCOUNT COMPONENT - IMPROVED ===== */
+.metamask-account-container {
+  min-width: 160px;
+}
+
+.metamask-badge {
+  background: var(--metamask-gradient);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: default;
+  transition: all 0.3s ease;
+  color: white !important;
+  text-decoration: none !important;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.metamask-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 118, 37, 0.3);
+}
+
+/* Two-line layout */
+.metamask-badge .d-flex.flex-column {
+  line-height: 1.2;
+}
+
+.metamask-badge small {
+  font-size: 0.7rem;
+  opacity: 0.9;
+}
+
+.metamask-badge .font-monospace {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Copy button styles */
+.btn-copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  color: white !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.btn-copy:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: scale(1.1);
+}
+
+.btn-copy:active {
+  transform: scale(0.95);
+}
+
+.btn-copy:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Copy icon specific styles */
+.bi-copy,
+.bi-check-lg {
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.bi-check-lg {
+  color: #4ade80 !important; /* Green checkmark */
+}
+
+/* Success state for copy */
+.btn-copy.copied {
+  background: rgba(74, 222, 128, 0.2) !important;
+}
+
+/* Wallet connection states */
+.wallet-connecting {
+  opacity: 0.7;
+}
+
+.wallet-error {
+  color: #dc3545;
+  font-size: 0.75rem;
+}
+
+/* Responsive adjustments for wallet display */
+@media (max-width: 768px) {
+  .metamask-account-container {
+    min-width: 140px;
+  }
+
+  .metamask-badge {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    min-height: 45px;
+  }
+
+  .metamask-badge small {
+    font-size: 0.65rem;
+  }
+
+  .metamask-badge .font-monospace {
+    font-size: 0.7rem;
+  }
+}
+
+/* Tooltip customizations */
+.tooltip {
+  font-size: 0.75rem;
+}
+
+.tooltip .tooltip-inner {
+  background: #1f2937;
+  color: white;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+/* Badge override for MetaMask */
+.badge.bg-success.metamask-badge {
+  background: var(--metamask-gradient) !important;
+  border: none;
+  display: inline-flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Ensure proper spacing in navbar */
+.navbar-content .metamask-account-container {
+  margin-left: auto;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+  background: var(--primary-gradient);
+  color: white;
+  padding: var(--section-padding) 0;
+  position: relative;
+  width: 100vw;
+  margin: 0;
+  left: 0;
+  right: 0;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+/**
+ * Subtle background pattern for visual interest
+ */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/**
+ * Content container for centered alignment within full-width background
+ */
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/**
+ * Container for visual elements in hero section
+ * Ensures proper positioning and prevents content overlap
+ */
+.hero-visual-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/**
+ * Main visual element with higher z-index for proper layering
+ */
+.hero-visual-element {
+  z-index: 2;
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+}
+
+/**
+ * Background decorative element with lower opacity
+ */
+.hero-background-element {
+  z-index: 1;
+  opacity: 0.25;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/**
+ * Trust indicators section in hero
+ */
+.trust-indicator {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* ===== FEATURES SECTION ===== */
+.features-section {
+  background: white;
+  width: 100vw;
+  margin: 0;
+  padding: var(--section-padding) 0;
+}
+
+/**
+ * Content container for features section
+ */
+.features-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/**
+ * Individual feature item with centered content
+ */
+.feature-item {
+  height: 100%;
+  padding: 2rem 1rem;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-5px);
+}
+
+/**
+ * Feature icon with gradient background and circular design
+ */
+.feature-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: var(--primary-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: white;
+  font-size: 2rem;
+  transition: transform 0.3s ease;
+}
+
+.feature-item:hover .feature-icon {
+  transform: scale(1.1);
+}
+
+/* ===== FOOTER COMPONENT ===== */
+.certichain-footer {
+  background: #1a202c !important;
+  color: #ffffff !important;
+  width: 100vw;
+  margin: 0;
+  padding: 60px 0 40px 0;
+}
+
+/**
+ * Footer content container
+ */
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/**
+ * Ensure proper text contrast in footer
+ */
+.certichain-footer .text-muted {
+  color: #a0aec0 !important;
+}
+
+.certichain-footer a {
+  color: #a0aec0 !important;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.certichain-footer a:hover {
+  color: #ffffff !important;
+}
+
+.certichain-footer h5,
+.certichain-footer h6 {
+  color: #ffffff !important;
+}
+
+/* ===== CARD COMPONENT ===== */
+/**
+ * Modern card design with glass morphism effect
+ * Includes hover animations for interactive feedback
+ */
+.certichain-card {
+  border: none;
+  border-radius: var(--card-border-radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  text-align: left !important;
+}
+
+.certichain-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== BUTTON COMPONENTS ===== */
+/**
+ * Primary button with gradient background and hover effects
+ */
+.btn-primary {
+  background: var(--primary-gradient);
+  border: none;
+  border-radius: var(--button-border-radius);
+  padding: 12px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+/**
+ * Outline light button for hero section
+ */
+.btn-outline-light {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+  border-radius: var(--button-border-radius);
+  padding: 12px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
+}
+
+/* MetaMask connect button */
+.btn-outline-primary {
+  border-radius: var(--button-border-radius);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* ===== FORM CONTROLS ===== */
+.form-control {
+  border-radius: var(--button-border-radius);
+  border: 2px solid #e2e8f0;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* ===== STATUS INDICATORS ===== */
+.status-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.status-connected {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-disconnected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Badge styles for MetaMask */
+.badge.bg-success {
+  background: var(--metamask-gradient) !important;
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.badge.bg-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 118, 37, 0.3);
+}
+
+/* ===== ANIMATIONS ===== */
+/**
+ * Fade in up animation for staggered content reveals
+ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/**
+ * Stagger animations for feature items
+ * Each item fades in with sequential delays
+ */
+.feature-stagger {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.feature-stagger:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.feature-stagger:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.feature-stagger:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.feature-stagger:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.feature-stagger:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.feature-stagger:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+/* ===== PAGE CONTENT SPACING ===== */
+/**
+ * Consistent spacing for all page content below navbar
+ */
+.page-content {
+  padding-top: 20px; /* Additional spacing below navbar spacer */
+}
+
+.container.py-5 {
+  padding-top: 2rem !important; /* Ensure consistent top padding */
+}
+
+/* ===== LOADING STATES ===== */
+/**
+ * Skeleton loading animation for content placeholders
+ */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Spinner adjustments */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ===== TRANSITIONS & INTERACTIONS ===== */
+/**
+ * Smooth transitions for interactive elements
+ */
+a,
+.btn {
+  transition: all 0.3s ease;
+}
+
+.hover-text-light:hover {
+  color: #ffffff !important;
+}
+
+/* Cursor pointer for interactive elements */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* ===== MONOSPACE FONTS ===== */
+/**
+ * For Ethereum addresses and code display
+ */
+.font-monospace {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.875rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+/**
+ * Mobile-first responsive adjustments
+ */
+@media (max-width: 768px) {
+  /* Navbar adjustments */
+  :root {
+    --navbar-height: 70px;
+  }
+
+  .navbar-spacer {
+    height: var(--navbar-height-mobile);
+  }
+
+  .hero-section {
+    margin-top: calc(-1 * var(--navbar-height-mobile));
+    padding-top: var(--navbar-height-mobile);
+  }
+
+  /* MetaMask adjustments for mobile */
+  .metamask-badge {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+
+  .badge.bg-success {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+
+  /* Section padding adjustments */
+  .hero-section {
+    padding: 40px 0;
+    min-height: 70vh;
+  }
+
+  .features-section {
+    padding: 40px 0;
+  }
+
+  /* Typography scaling */
+  .display-3 {
+    font-size: 2.2rem;
+  }
+
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .display-5 {
+    font-size: 1.8rem;
+  }
+
+  .display-6 {
+    font-size: 1.5rem;
+  }
+
+  /* Feature item spacing */
+  .feature-item {
+    padding: 1.5rem 0.5rem;
+  }
+
+  /* Content container padding */
+  .hero-content,
+  .features-content,
+  .footer-content,
+  .navbar-content {
+    padding: 0 15px;
+  }
+
+  /* Hide system status on mobile */
+  .d-none.d-lg-block {
+    display: none !important;
+  }
+
+  /* Adjust trust indicators */
+  .trust-indicator {
+    padding-top: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .trust-indicator .d-flex {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Button adjustments for mobile */
+  .btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+/**
+ * Tablet responsive adjustments
+ */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .hero-content,
+  .features-content,
+  .footer-content {
+    padding: 0 30px;
+  }
+}
+
+/**
+ * Large desktop enhancements
+ */
+@media (min-width: 1200px) {
+  .hero-content,
+  .features-content,
+  .footer-content {
+    max-width: 1400px;
+  }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .certichain-navbar,
+  .certichain-footer,
+  .navbar-spacer {
+    display: none !important;
+  }
+
+  .hero-section {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  /* Hide MetaMask badge when printing */
+  .metamask-badge,
+  .badge.bg-success {
+    display: none !important;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+/**
+ * Focus styles for keyboard navigation
+ */
+.btn:focus,
+.form-control:focus,
+.nav-link:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Focus styles for copy button */
+.btn-copy:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5) !important;
+  outline-offset: 1px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .certichain-card {
+    border: 2px solid #2d3748;
+  }
+
+  .feature-icon {
+    border: 2px solid white;
+  }
+
+  .metamask-badge {
+    border: 2px solid white;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .metamask-badge:hover,
+  .btn-copy:hover,
+  .feature-item:hover,
+  .certichain-card:hover {
+    transform: none;
+  }
+}

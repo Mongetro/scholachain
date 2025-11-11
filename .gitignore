@@ -1,0 +1,166 @@
+# scholachain/.gitignore
+
+# ====================
+# BLOCKCHAIN ​​SMART CONTRACTS
+# ====================
+blockchain-smart-contracts/.env
+blockchain-smart-contracts/.env.local
+blockchain-smart-contracts/cache-* 
+blockchain-smart-contracts/node_modules/
+
+# Compilation artifacts
+blockchain-smart-contracts/artifacts/
+blockchain-smart-contracts/cache/
+blockchain-smart-contracts/typechain/
+blockchain-smart-contracts/typechain-types/
+
+# Hardhat deployments and cache
+blockchain-smart-contracts/ignition/deployments/
+blockchain-smart-contracts/deployments/
+blockchain-smart-contracts/.openzeppelin/
+
+# Generated files
+blockchain-smart-contracts/coverage/
+blockchain-smart-contracts/coverage.json
+
+# ====================
+# BACKEND NODE.JS
+# ====================
+backend/.env
+backend/.env.local
+
+# Dependencies
+backend/node_modules/
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+backend/.npm
+backend/.yarn
+
+# Build outputs
+backend/dist/
+backend/build/
+
+backend/contract/
+
+#Logs
+backend/logs/
+*.log
+backend/.logs/
+
+# Hidden
+backend/.cache/
+backend/.tsbuildinfo
+
+# Temporary uploaded files
+backend/uploads/
+backend/temp/
+backend/storage/
+
+# ====================
+# FRONTEND REACT/FAST
+# ====================
+frontend/.env
+frontend/.env.local
+
+# Dependencies
+frontend/node_modules/
+frontend/.npm
+frontend/.yarn
+frontend/.pnpm-store
+
+# Build outputs
+frontend/dist/
+frontend/build/
+
+frontend/public/contract-data/
+
+# Hidden
+frontend/.vite/
+frontend/.vitest/
+frontend/.eslintcache
+
+# Development environment
+frontend/.env.*.local
+
+# Tests
+frontend/coverage/
+
+# Editors/IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System
+.DS_Store
+.DS_Store?
+
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ====================
+# DOCKER & CONTAINERS
+# =====================
+# Docker
+.docker/
+
+# Docker Volumes
+data/
+volumes/
+*.volume
+
+# Images and Containers
+*.tar.gz
+*.dockerimage
+
+# ====================
+# SECURITY
+# ====================
+# Private Keys and Certificates
+*.key
+*.pem
+*.crt
+*.csr
+*.keystore
+*.truststore
+
+# Files backup
+*.backup
+*.bak
+*.old
+*.orig
+
+# Temporary files
+*.tmp
+*.temp
+*.TMP
+
+# ====================
+#GENERATED DOCUMENTATION
+# ====================
+docs/generated/
+*.to
+*.toc
+*.out
+
+# ====================
+#MISC
+# ====================
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# OS generated files
+Icon?
+nohup.out

@@ -1,0 +1,40 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Nodejs ScholaChain back-end",
+  "main": "dist/app.js",
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "test": "vitest run"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Mongetro GOINT",
+    "email": "mongetrog4@gmail.com",
+    "url": "https://github.com/Mongetro"
+  },
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "ethers": "^6.15.0",
+    "express": "^5.1.0",
+    "form-data": "^4.0.4",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.2",
+    "viem": "^2.38.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.4",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.4",
+    "zod": "^3.25.76"
+  }
+}

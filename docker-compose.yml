@@ -1,0 +1,305 @@
+# scholachain/docker-compose.yml
+# Complete Docker Compose configuration for ScholaChain Blockchain Certification Platform
+# Optimized for both local development and Sepolia testnet deployments
+
+# Named volumes for data persistence and sharing between services
+volumes:
+  contract-data: # Shared volume for contract configuration files
+    driver: local
+  node_modules_blockchain: # Isolated node_modules for blockchain service
+    driver: local
+  node_modules_backend: # Isolated node_modules for backend service
+    driver: local
+  node_modules_frontend: # Isolated node_modules for frontend service
+    driver: local
+
+services:
+  # ====================
+  # LOCAL BLOCKCHAIN NODE (LOCAL DEVELOPMENT ONLY)
+  # ====================
+  hardhat-node:
+    build:
+      context: ./blockchain-smart-contracts
+      dockerfile: Dockerfile
+    container_name: scholachain-hardhat-node
+    ports:
+      - '8545:8545' # JSON-RPC endpoint for local blockchain
+    volumes:
+      - ./blockchain-smart-contracts:/app # Source code mount
+      - node_modules_blockchain:/app/node_modules # Isolated dependencies
+    profiles:
+      - local
+    command: npx hardhat node --hostname 0.0.0.0
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8545']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ====================
+  # SMART CONTRACT DEPLOYMENT SERVICE - LOCAL DEVELOPMENT
+  # ====================
+  deployer-local:
+    build:
+      context: ./blockchain-smart-contracts
+      dockerfile: Dockerfile
+    container_name: scholachain-deployer-local
+    volumes:
+      - ./blockchain-smart-contracts:/app # Source code mount
+      - node_modules_blockchain:/app/node_modules # Isolated dependencies
+      - ./blockchain-smart-contracts/.env:/app/.env:ro # Environment variables (read-only)
+      - ./backend/contract:/app/../../backend/contract # CORRECTION: Mount host backend contract directory
+      - ./frontend/public/contract-data:/app/../../frontend/public/contract-data # CORRECTION: Mount host frontend contract data
+    environment:
+      - DEPLOY_NETWORK=localhost
+      - NODE_ENV=development
+    env_file:
+      - ./blockchain-smart-contracts/.env # Blockchain-specific environment
+    profiles:
+      - local
+    command: >
+      sh -c "
+        echo '🔧 Starting LOCAL smart contract deployment...' &&
+        echo '⏳ Waiting for Hardhat node to be ready...' &&
+        until curl -f http://hardhat-node:8545 >/dev/null 2>&1; do
+          sleep 3
+        done &&
+        echo '✅ Hardhat node ready, deploying contracts...' &&
+        ./scripts/deploy-wrapper.sh
+      "
+    depends_on:
+      hardhat-node:
+        condition: service_healthy
+
+  # ====================
+  # SMART CONTRACT DEPLOYMENT SERVICE - SEPOLIA TESTNET
+  # ====================
+  deployer-sepolia:
+    build:
+      context: ./blockchain-smart-contracts
+      dockerfile: Dockerfile
+    container_name: scholachain-deployer-sepolia
+    volumes:
+      - ./blockchain-smart-contracts:/app # Source code mount
+      - node_modules_blockchain:/app/node_modules # Isolated dependencies
+      - ./blockchain-smart-contracts/.env:/app/.env:ro # Environment variables (read-only)
+      - ./backend/contract:/app/../../backend/contract # CORRECTION: Mount host backend contract directory
+      - ./frontend/public/contract-data:/app/../../frontend/public/contract-data # CORRECTION: Mount host frontend contract data
+    environment:
+      - DEPLOY_NETWORK=sepolia
+      - NODE_ENV=production
+    env_file:
+      - ./blockchain-smart-contracts/.env # Blockchain-specific environment
+    profiles:
+      - sepolia
+    command: >
+      sh -c "
+        echo '🔧 Starting SEPOLIA smart contract deployment...' &&
+        echo '🌐 Deploying to Sepolia testnet...' &&
+        ./scripts/deploy-wrapper.sh
+      "
+
+  # ====================
+  # BACKEND API SERVICE - LOCAL DEVELOPMENT
+  # ====================
+  backend-local:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: scholachain-backend-local
+    ports:
+      - '3001:3001' # Backend API port
+    volumes:
+      - ./backend:/app # Source code mount for development (hot reload)
+      - node_modules_backend:/app/node_modules # Isolated dependencies
+      - ./backend/.env:/app/.env:ro # Backend environment variables (read-only)
+      - ./backend/contract:/app/contract:ro # CORRECTION: Mount host backend contract directory
+    environment:
+      - NODE_ENV=development
+      - DEPLOY_NETWORK=localhost
+      - BACKEND_PORT=3001
+      - FRONTEND_URL=http://localhost:5173
+    env_file:
+      - ./backend/.env # Backend-specific environment
+    profiles:
+      - local
+    command: >
+      sh -c "
+        echo '⏳ Waiting for LOCAL contract deployment...' &&
+        # Wait for contract files with timeout
+        timeout 120 sh -c '
+          while [ ! -f /app/contract/ScholaChain.json ]; do 
+            echo \"⏳ Waiting for contract deployment...\"; 
+            sleep 5; 
+          done
+        ' &&
+        echo '✅ Contracts found, starting LOCAL backend server...' &&
+        npm run dev
+      "
+    depends_on:
+      - deployer-local
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/health']
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # ====================
+  # BACKEND API SERVICE - SEPOLIA TESTNET
+  # ====================
+  backend-sepolia:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: scholachain-backend-sepolia
+    ports:
+      - '3001:3001' # Backend API port
+    volumes:
+      - ./backend:/app # Source code mount for development
+      - node_modules_backend:/app/node_modules # Isolated dependencies
+      - ./backend/.env:/app/.env:ro # Backend environment variables (read-only)
+      - ./backend/contract:/app/contract:ro # CORRECTION: Mount host backend contract directory
+    environment:
+      - NODE_ENV=development
+      - DEPLOY_NETWORK=sepolia
+      - BACKEND_PORT=3001
+      - FRONTEND_URL=http://localhost:5173
+    env_file:
+      - ./backend/.env # Backend-specific environment
+    profiles:
+      - sepolia
+    command: >
+      sh -c "
+        echo '⏳ Waiting for SEPOLIA contract deployment...' &&
+        # Wait for contract files with timeout
+        timeout 120 sh -c '
+          while [ ! -f /app/contract/ScholaChain.json ]; do 
+            echo \"⏳ Waiting for contract deployment...\"; 
+            sleep 5; 
+          done
+        ' &&
+        echo '✅ Contracts found, starting SEPOLIA backend server...' &&
+        npm run dev
+      "
+    depends_on:
+      - deployer-sepolia
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/health']
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # ====================
+  # FRONTEND REACT APPLICATION - LOCAL DEVELOPMENT
+  # ====================
+  frontend-local:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: scholachain-frontend-local
+    ports:
+      - '5173:5173' # Vite development server port
+    volumes:
+      - ./frontend:/app # Source code mount for hot reload
+      - node_modules_frontend:/app/node_modules # Isolated dependencies
+      - ./frontend/public/contract-data:/app/public/contract-data:ro # CORRECTION: Mount host frontend contract data
+    environment:
+      - NODE_ENV=development
+      - VITE_BACKEND_URL=http://localhost:3001
+      - VITE_APP_NAME=ScholaChain
+      - VITE_APP_VERSION=1.0.0
+    profiles:
+      - local
+    command: >
+      sh -c "
+        echo '🔧 Setting up LOCAL frontend environment...' &&
+        # Verify contract data availability
+        if [ -d '/app/public/contract-data' ] && [ -n \"\$(ls -A /app/public/contract-data)\" ]; then
+          echo '✅ Contract data found:';
+          ls -la /app/public/contract-data/;
+          echo '🚀 Starting Vite development server...';
+          npm run dev -- --host 0.0.0.0
+        else
+          echo '❌ Contract data not found - waiting for deployment...';
+          echo '⏳ Retrying in 5 seconds...';
+          sleep 5;
+          # Final check before failing
+          if [ -d '/app/public/contract-data' ] && [ -n \"\$(ls -A /app/public/contract-data)\" ]; then
+            echo '✅ Contract data now available, starting server...';
+            npm run dev -- --host 0.0.0.0
+          else
+            echo '💥 ERROR: Contract deployment failed or timed out';
+            echo '💡 Please check deployer logs and run: make deploy-local';
+            exit 1;
+          fi;
+        fi
+      "
+    depends_on:
+      - backend-local
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5173']
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  # ====================
+  # FRONTEND REACT APPLICATION - SEPOLIA TESTNET
+  # ====================
+  frontend-sepolia:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: scholachain-frontend-sepolia
+    ports:
+      - '5173:5173' # Vite development server port
+    volumes:
+      - ./frontend:/app # Source code mount for development
+      - node_modules_frontend:/app/node_modules # Isolated dependencies
+      - ./frontend/public/contract-data:/app/public/contract-data:ro # CORRECTION: Mount host frontend contract data
+    environment:
+      - NODE_ENV=development
+      - VITE_BACKEND_URL=http://localhost:3001
+      - VITE_APP_NAME=ScholaChain
+      - VITE_APP_VERSION=1.0.0
+    profiles:
+      - sepolia
+    command: >
+      sh -c "
+        echo '🔧 Setting up SEPOLIA frontend environment...' &&
+        # Verify contract data availability with robust checking
+        if [ -d '/app/public/contract-data' ] && [ -n \"\$(ls -A /app/public/contract-data)\" ]; then
+          echo '✅ Contract data found:';
+          ls -la /app/public/contract-data/;
+          echo '🌐 Starting frontend for Sepolia testnet...';
+          npm run dev -- --host 0.0.0.0
+        else
+          echo '⏳ Waiting for contract deployment...';
+          # Wait for contract data with timeout
+          timeout 120 sh -c '
+            while [ ! -f /app/public/contract-data/ScholaChain.json ]; do 
+              echo \"⏳ Waiting for contract data...\"; 
+              sleep 5; 
+            done
+          ' &&
+          if [ -f /app/public/contract-data/ScholaChain.json ]; then
+            echo '✅ Contract data now available, starting server...';
+            npm run dev -- --host 0.0.0.0
+          else
+            echo '💥 ERROR: Contract deployment timed out';
+            echo '💡 Please check deployer logs and ensure contracts are deployed';
+            exit 1;
+          fi;
+        fi
+      "
+    depends_on:
+      - backend-sepolia
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5173']
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 40s

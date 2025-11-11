@@ -1,0 +1,26 @@
+{
+  "name": "blockchain-smart-contracts",
+  "version": "1.0.0",
+  "author": {
+    "name": "Mongetro GOINT",
+    "email": "mongetrog4@gmail.com",
+    "url": "https://github.com/Mongetro"
+  },
+  "type": "module",
+  "scripts": {
+    "compile": "hardhat compile",
+    "node": "hardhat node --hostname 0.0.0.0",
+    "deploy": "ts-node scripts/deploy.ts",
+    "deploy:local": "ts-node scripts/deploy.ts localhost",
+    "deploy:sepolia": "ts-node scripts/deploy.ts sepolia",
+    "dev": "npm run compile && npm run deploy:local"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ignition": "^3.0.3",
+    "@nomicfoundation/hardhat-toolbox-viem": "^5.0.0",
+    "hardhat": "^3.0.9",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.0",
+    "viem": "^2.38.4"
+  }
+}
