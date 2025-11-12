@@ -70,6 +70,8 @@ const Footer: React.FC = () => {
                 href="https://github.com/Mongetro"
                 className="text-muted"
                 title="GitHub"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <i className="bi bi-github fs-5"></i>
               </a>
@@ -77,6 +79,8 @@ const Footer: React.FC = () => {
                 href="https://x.com/mongetrogoint"
                 className="text-muted"
                 title="Twitter"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <i className="bi bi-twitter fs-5"></i>
               </a>
@@ -84,6 +88,8 @@ const Footer: React.FC = () => {
                 href="https://www.linkedin.com/in/mongetro-goint-ph-d-227b94141/"
                 className="text-muted"
                 title="LinkedIn"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <i className="bi bi-linkedin fs-5"></i>
               </a>
@@ -91,6 +97,8 @@ const Footer: React.FC = () => {
                 href="https://github.com/Mongetro/scholachain"
                 className="text-muted"
                 title="Documentation"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <i className="bi bi-file-text fs-5"></i>
               </a>
@@ -99,6 +107,8 @@ const Footer: React.FC = () => {
                 href="https://sites.google.com/view/mongetrogoint"
                 className="text-muted"
                 title="Website"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <i className="bi bi-globe text-info fs-5"></i>
               </a>

@@ -54,21 +54,21 @@ The first things you need to do are cloning this repository and setting up the p
 git clone https://github.com/Mongetro/scholachain.git
 ```
 
-## 2. Blockchain (.env) configuration
-
-Create a .env file in the blockchain-smart-contracts directory :
-
-In the project root directory:
+Go to the project root directory:
 
 ```sh
 cd scholachain
 ```
 
+## 2. Blockchain (.env) configuration
+
+Create a .env file in the blockchain-smart-contracts directory :
+
 ```sh
 cp ./blockchain-smart-contracts/.env.example ./blockchain-smart-contracts/.env
 ```
 
-Once you have copied the .env file, configure all environment variables according to the instructions included in the file.
+Once you have created the .env file, configure all environment variables according to the instructions included in the file.
 
 PS : ⚠️ NEVER commit real private keys in your .env to version control
 
@@ -80,7 +80,7 @@ Always in the project root directory:
 cp ./backend/.env.example ./backend/.env
 ```
 
-Once you have copied the .env file, configure all environment variables according to the instructions included in the file.
+Once you have created the .env file, configure all environment variables according to the instructions included in the file.
 
 PS : ⚠️ NEVER commit real private keys in your .env to version control
 
@@ -96,9 +96,11 @@ make sepolia
 
 Wait until all services are up and running. The decentralized application (dApp) will usually be available at [http://localhost:5173/](http://localhost:5173/).
 
-Remember that in the browser, you must have the account whose private key you added to scholachain/blockchain-smart-contracts/.env. This account is registered as the Ministry of Education (SUPER_ADMIN) during deployment. You should have other accounts (with Sepolia ETH) which will be considered certificate issuing institutions.
+Remember that in the browser wallet, you must have the account whose private key you added to scholachain/blockchain-smart-contracts/.env. This account is registered as the Ministry of Education (SUPER_ADMIN) during deployment. You should have other accounts (with Sepolia Testnet ETH) which will be considered certificate issuing institutions.
 
 - Stop all services:
+
+Once you have launched the decentralized application and tested its features, you can stop all services with the following command :
 
 ```sh
 make stop
@@ -121,7 +123,7 @@ make stop
 
 ## 3. Issue Certificate
 
-- Make sure you log in with the correct account (an account registered as an issuer)
+- Make sure you log in with the correct account (an account registered as an issuer by the SUPER_ADMIN)
 - Navigate to "Issue Certificate"
 - Fill in details and upload the PDF certificate/diploma file
 - Send data and confirm the blockchain transaction via your wallet (metamask)
@@ -129,8 +131,8 @@ make stop
 ## 4. Verify Certificate/Diploma
 
 - Navigate to " Verify Certificate"
-- Enter the certificate ID and upload the certificate PDF file
-- Verify the Certificate via Verify Certificate Authenticity button
+- Enter the certificate ID and upload the certificate PDF file to verify
+- Verify the Certificate via Verify Certificate button
 
 ## Troubleshooting
 
@@ -139,11 +141,11 @@ make stop
 **_Metamask Connection Issues_**
 
 - Ensure you're on the correct network
-- Reset account in MetaMask (Settings > Advanced > Clear activity tab data)
+- Reset account and clear cache in MetaMask (Settings > Advanced > Clear activity tab data)
 
 **_Transaction Failures_**
 
-- Check you have sufficient gas funds (Sepoli ETH)
-- Verify tha the services are running and contracts are deployed
+- Check you have sufficient gas funds (Sepoli ETH) in the connected account
+- Verify that all services are running and contracts are correctly deployed
 
 **ScholaChain : Built with ❤️ for transparency and authenticity of diplomas and certificates! 🎉**
